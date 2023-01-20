@@ -7,7 +7,7 @@ function App() {
   const { data } = useGetData();
 
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // TODO: 쿼리로 관리
 
   const onChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -71,6 +71,7 @@ function App() {
             ))}
         </tbody>
       </table>
+      {/* 페이지네이션 */}
       <div>
         <div>
           페이지당 행:
