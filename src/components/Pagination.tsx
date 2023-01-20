@@ -7,10 +7,30 @@ type Params = {
 };
 
 const Pagination = ({ total, currentPage, setCurrentPage }: Params) => {
+  function goToFirst() {
+    setCurrentPage(0);
+  }
+
+  function goToPrev() {
+    if (currentPage - 1 >= 0) setCurrentPage(currentPage - 1);
+  }
+
+  function goToNext() {
+    if (currentPage + 1 < total) setCurrentPage(currentPage + 1);
+  }
+
+  function goToLast() {
+    setCurrentPage(total - 1);
+  }
+
   return (
     <div className={styles.pagination}>
-      <button type="button">{'<<'}</button>
-      <button type="button">{'<'}</button>
+      <button type="button" onClick={goToFirst}>
+        {'<<'}
+      </button>
+      <button type="button" onClick={goToPrev}>
+        {'<'}
+      </button>
       <div className={styles.buttons}>
         {Array.from({ length: total }, (_, idx) => idx).map((number) => (
           <button
@@ -25,8 +45,12 @@ const Pagination = ({ total, currentPage, setCurrentPage }: Params) => {
           </button>
         ))}
       </div>
-      <button type="button">{'>'}</button>
-      <button type="button">{'>>'}</button>
+      <button type="button" onClick={goToNext}>
+        {'>'}
+      </button>
+      <button type="button" onClick={goToLast}>
+        {'>>'}
+      </button>
     </div>
   );
 };
