@@ -21,15 +21,27 @@ type QueryResponse = {
   total: number;
 };
 
-const useGetData = () => {
-  return useQuery<QueryResponse>(['products'], () =>
-    fetch('https://dummyjson.com/products?limit=100').then((res) => {
-      const json = res.json();
-      if (!res.ok) {
-        throw new Error('Fail');
-      }
-      return json;
-    })
+type Options = {
+  condition: string;
+  keyword: string;
+};
+
+const useGetData = ({ condition, keyword }: Options) => {
+  return useQuery<QueryResponse, unknown, Products[]>(
+    ['products'],
+    () =>
+      fetch('https://dummyjson.com/products?limit=100').then((res) => {
+        const json = res.json();
+        if (!res.ok) {
+          throw new Error('Fail');
+        }
+        return json;
+      }),
+    {
+      select: (res: QueryResponse) => {
+        return res.products;
+      },
+    }
   );
 };
 

@@ -5,20 +5,25 @@ import Pagination from './components/Pagination';
 import Search from './components/Search';
 
 function App() {
-  const { data } = useGetData();
+  // search params 관련
+  const searchParams = window.location.search;
+  const searchParamsObj = new URLSearchParams(searchParams);
+
+  const { data } = useGetData({
+    condition: searchParamsObj.get('condition') || 'all',
+    keyword: searchParamsObj.get('keyword') || '',
+  });
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // TODO: 쿼리로 관리
 
-  const [totalPage, setTotalPage] = useState(
-    (data?.products.length || 0) / rowsPerPage
-  );
+  const [totalPage, setTotalPage] = useState((data?.length || 0) / rowsPerPage);
 
   // 페이지당 행 바뀌면
   useEffect(() => {
     setCurrentPage(0);
-    setTotalPage((data?.products.length || 0) / rowsPerPage);
-  }, [data?.products.length, rowsPerPage]);
+    setTotalPage((data?.length || 0) / rowsPerPage);
+  }, [data?.length, rowsPerPage]);
 
   function onChangePerPage(e: React.ChangeEvent<HTMLSelectElement>) {
     setRowsPerPage(Number(e.target.value));
@@ -31,7 +36,7 @@ function App() {
       <Search />
 
       {/* 목록 영역 */}
-      <div>검색된 데이터 {data?.total || '-'}건</div>
+      <div>검색된 데이터 {data?.length || '-'}건</div>
       <table>
         <thead>
           <tr>
@@ -45,8 +50,8 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data?.products
-            .slice(
+          {data
+            ?.slice(
               currentPage * rowsPerPage,
               currentPage * rowsPerPage + rowsPerPage
             )
