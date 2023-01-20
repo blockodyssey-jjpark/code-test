@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useGetData from './hooks/useGetData';
 
-import './App.css';
+import styles from './app.module.css';
 
 function App() {
   const { data } = useGetData();
@@ -81,7 +81,7 @@ function App() {
             <option value="50">50</option>
           </select>
         </div>
-        <div>
+        <div className={styles.pagination}>
           <button>{'<<'}</button>
           <button>{'<'}</button>
           페이지
