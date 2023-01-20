@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 type Products = {
@@ -23,17 +24,30 @@ type QueryResponse = {
 };
 
 function App() {
-  const { data } = useQuery<QueryResponse>(['products'], () =>
-    fetch('https://dummyjson.com/products?limit=100').then((res) => {
-      const json = res.json();
-      if (!res.ok) {
-        throw new Error('Fail');
-      }
-      return json;
-    })
+  const { data } = useQuery<QueryResponse>(
+    ['products'],
+    () =>
+      fetch('https://dummyjson.com/products?limit=100').then((res) => {
+        const json = res.json();
+        if (!res.ok) {
+          throw new Error('Fail');
+        }
+        return json;
+      }),
+    {
+      select: (res) => {
+        console.log(res);
+        return res;
+      },
+    }
   );
 
-  console.log(data);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const onChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+  };
 
   return (
     <div className="App">
@@ -65,29 +79,51 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data?.products.map((data, idx) => (
-            <tr key={idx}>
-              <td>{data.id}</td>
-              <td>{data.title}</td>
-              <td>{data.brand}</td>
-              <td title={data.description}>
-                {data.description.length > 40
-                  ? data.description.slice(0, 40) + '...'
-                  : data.description}
-              </td>
-              <td>
-                {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                  maximumFractionDigits: 0,
-                }).format(data.price)}
-              </td>
-              <td>{data.rating}</td>
-              <td>{data.stock}</td>
-            </tr>
-          ))}
+          {data?.products
+            .slice(
+              currentPage * rowsPerPage,
+              currentPage * rowsPerPage + rowsPerPage
+            )
+            .map((data, idx) => (
+              <tr key={idx}>
+                <td>{data.id}</td>
+                <td>{data.title}</td>
+                <td>{data.brand}</td>
+                <td title={data.description}>
+                  {data.description.length > 40
+                    ? data.description.slice(0, 40) + '...'
+                    : data.description}
+                </td>
+                <td>
+                  {new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    maximumFractionDigits: 0,
+                  }).format(data.price)}
+                </td>
+                <td>{data.rating}</td>
+                <td>{data.stock}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
+      <div>
+        <div>
+          페이지당 행:
+          <select onChange={onChangePerPage}>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+        <div>
+          <button>{'<<'}</button>
+          <button>{'<'}</button>
+          페이지
+          <button>{'>>'}</button>
+          <button>{'>'}</button>
+        </div>
+      </div>
     </div>
   );
 }
