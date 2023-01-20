@@ -20,7 +20,7 @@ function App() {
   });
 
   // 페이지 관련
-  const { currentPage, total } = useAppSelector((state) => state.page);
+  const { currentPage } = useAppSelector((state) => state.page);
   const [pageSize, setPageSize] = useState(10); // TODO: 쿼리로 관리
 
   // 데이터 또는 페이지당 행 변경 시
