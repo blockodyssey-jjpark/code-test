@@ -21,9 +21,9 @@ function App() {
     setTotalPage((data?.products.length || 0) / rowsPerPage);
   }, [data?.products.length, rowsPerPage]);
 
-  const onChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  function onChangePerPage(e: React.ChangeEvent<HTMLSelectElement>) {
     setRowsPerPage(Number(e.target.value));
-  };
+  }
 
   return (
     <div className="App">
