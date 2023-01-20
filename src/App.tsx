@@ -1,46 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import useGetData from './hooks/useGetData';
+
 import './App.css';
 
-type Products = {
-  brand: string;
-  category: string;
-  description: string;
-  discountPercentage: number;
-  id: number;
-  images: string[];
-  price: number;
-  rating: number;
-  stock: number;
-  thumbnail: string;
-  title: string;
-};
-
-type QueryResponse = {
-  limit: number;
-  products: Products[];
-  skip: number;
-  total: number;
-};
-
 function App() {
-  const { data } = useQuery<QueryResponse>(
-    ['products'],
-    () =>
-      fetch('https://dummyjson.com/products?limit=100').then((res) => {
-        const json = res.json();
-        if (!res.ok) {
-          throw new Error('Fail');
-        }
-        return json;
-      }),
-    {
-      select: (res) => {
-        console.log(res);
-        return res;
-      },
-    }
-  );
+  const { data } = useGetData();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
