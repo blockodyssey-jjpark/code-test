@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useGetData from './hooks/useGetData';
 
 import Pagination from './components/Pagination';
@@ -25,21 +25,46 @@ function App() {
     setRowsPerPage(Number(e.target.value));
   }
 
+  // 검색 관련
+  const selectRef = useRef<HTMLSelectElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function onSubmitSearch(e: React.FormEvent) {
+    e.preventDefault();
+
+    window.location.replace(
+      `${window.location.origin}?condition=${selectRef.current?.value}&keyword=${inputRef.current?.value}`
+    );
+  }
+
+  // search params 관련
+  const searchParams = window.location.search;
+  const searchParamsObj = new URLSearchParams(searchParams);
+
   return (
     <div className="App">
       <h1>Frontend Code Test</h1>
       {/* 검색 영역 */}
-      <div className={styles.search}>
+      <form className={styles.search} onSubmit={onSubmitSearch}>
         <h2 className={styles.searchHeader}>상품 검색</h2>
-        <label>상품 검색</label>
-        <select>
+        <select
+          name="condition"
+          ref={selectRef}
+          defaultValue={searchParamsObj.get('condition') || 'all'}
+        >
           <option value="all">전체</option>
-          <option>상품명</option>
-          <option>브랜드</option>
-          <option>상품내용</option>
+          <option value="title">상품명</option>
+          <option value="brand">브랜드</option>
+          <option value="description">상품내용</option>
         </select>
-        <input type="text" />
-      </div>
+        <input
+          name="keyword"
+          type="text"
+          ref={inputRef}
+          defaultValue={searchParamsObj.get('keyword') || ''}
+        />
+        <button type="submit">검색</button>
+      </form>
       {/* 목록 영역 */}
       <div>검색된 데이터 {data?.total || '-'}건</div>
       <table>
