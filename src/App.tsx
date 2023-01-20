@@ -93,17 +93,11 @@ function App() {
             <option value="50">50</option>
           </select>
         </div>
-        <div className={styles.pagination}>
-          <button>{'<<'}</button>
-          <button>{'<'}</button>
-          <Pagination
-            total={totalPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-          <button>{'>>'}</button>
-          <button>{'>'}</button>
-        </div>
+        <Pagination
+          total={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </div>
     </div>
   );

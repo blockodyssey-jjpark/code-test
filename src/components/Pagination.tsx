@@ -8,10 +8,11 @@ type Params = {
 
 const Pagination = ({ total, currentPage, setCurrentPage }: Params) => {
   return (
-    <div className={styles.buttons}>
-      {Array.from({ length: total }, (_, idx) => idx).map((number) => {
-        console.log(number, currentPage, number === currentPage);
-        return (
+    <div className={styles.pagination}>
+      <button>{'<<'}</button>
+      <button>{'<'}</button>
+      <div className={styles.buttons}>
+        {Array.from({ length: total }, (_, idx) => idx).map((number) => (
           <button
             key={number}
             onClick={() => {
@@ -21,8 +22,10 @@ const Pagination = ({ total, currentPage, setCurrentPage }: Params) => {
           >
             {number + 1}
           </button>
-        );
-      })}
+        ))}
+      </div>
+      <button>{'>'}</button>
+      <button>{'>>'}</button>
     </div>
   );
 };
