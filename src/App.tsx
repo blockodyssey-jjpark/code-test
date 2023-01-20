@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import useGetData from './hooks/useGetData';
 
+import Pagination from './components/Pagination';
+
 import styles from './app.module.css';
 
 function App() {
@@ -8,6 +10,16 @@ function App() {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // TODO: 쿼리로 관리
+
+  const [totalPage, setTotalPage] = useState(
+    (data?.products.length || 0) / rowsPerPage
+  );
+
+  // 페이지당 행 바뀌면
+  useEffect(() => {
+    setCurrentPage(0);
+    setTotalPage((data?.products.length || 0) / rowsPerPage);
+  }, [data?.products.length, rowsPerPage]);
 
   const onChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRowsPerPage(Number(e.target.value));
@@ -84,7 +96,11 @@ function App() {
         <div className={styles.pagination}>
           <button>{'<<'}</button>
           <button>{'<'}</button>
-          페이지
+          <Pagination
+            total={totalPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
           <button>{'>>'}</button>
           <button>{'>'}</button>
         </div>
