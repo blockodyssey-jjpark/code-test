@@ -5,7 +5,7 @@ import styles from './pagination.module.css';
 
 const Pagination = () => {
   const dispatch = useAppDispatch();
-  const { total } = useAppSelector((state) => state.page);
+  const { total, currentPage } = useAppSelector((state) => state.page);
 
   function goToPrev() {
     dispatch(goToPrevPage());
@@ -15,21 +15,42 @@ const Pagination = () => {
     dispatch(goToNextPage());
   }
 
+  const isShowGoToStart = total > 6 && currentPage >= 4;
+  const isStart = total <= 6 || currentPage < 4;
+  const isCenter = total > 6 && currentPage > 3 && currentPage < total - 3;
+  const isEnd = total > 6 && currentPage >= total - 3;
+  const isShowGoToEnd = total > 6 && currentPage < total - 3;
+
   return (
     <div className={styles.pagination}>
       <button type="button" onClick={goToPrev}>
         {'<'}
       </button>
       <div className={styles.buttons}>
-        {total <= 6 &&
-          Array.from({ length: total }, (_, idx) => idx).map((number) => (
-            <PageBtn key={number} number={number} />
-          ))}
-
-        {total > 6 && (
+        {isShowGoToStart && (
           <>
             <PageBtn number={0} />
             <span>...</span>
+          </>
+        )}
+
+        {isStart &&
+          Array.from({ length: total <= 6 ? total : 5 }, (_, idx) => idx).map(
+            (number) => <PageBtn key={number} number={number} />
+          )}
+
+        {isCenter &&
+          Array.from({ length: 3 }, (_, idx) => currentPage - 1 + idx).map(
+            (number) => <PageBtn key={number} number={number} />
+          )}
+
+        {isEnd &&
+          Array.from({ length: 5 }, (_, idx) => total - 5 + idx).map(
+            (number) => <PageBtn key={number} number={number} />
+          )}
+
+        {isShowGoToEnd && (
+          <>
             <span>...</span>
             <PageBtn number={total - 1} />
           </>
