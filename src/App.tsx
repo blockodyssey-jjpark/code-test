@@ -19,7 +19,7 @@ function App() {
 
   const [totalPage, setTotalPage] = useState((data?.length || 0) / rowsPerPage);
 
-  // 페이지당 행 바뀌면
+  // 데이터 또는 페이지당 행 변경 시
   useEffect(() => {
     setCurrentPage(0);
     setTotalPage((data?.length || 0) / rowsPerPage);
@@ -36,7 +36,8 @@ function App() {
       <Search />
 
       {/* 목록 영역 */}
-      <div>검색된 데이터 {data?.length || '-'}건</div>
+      <div>검색된 데이터 {data?.length || '0'}건</div>
+
       <table>
         <thead>
           <tr>
@@ -76,24 +77,31 @@ function App() {
                 <td>{data.stock}</td>
               </tr>
             ))}
+          {data?.length === 0 && (
+            <tr>
+              <td colSpan={7}>검색 결과가 없습니다.</td>
+            </tr>
+          )}
         </tbody>
       </table>
       {/* 페이지네이션 */}
-      <div>
+      {data?.length !== 0 && (
         <div>
-          페이지당 행:
-          <select onChange={onChangePerPage}>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
+          <div>
+            페이지당 행:
+            <select onChange={onChangePerPage}>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+          <Pagination
+            total={Math.ceil(totalPage)}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
-        <Pagination
-          total={totalPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
-      </div>
+      )}
     </div>
   );
 }
