@@ -3,27 +3,31 @@ import useGetData from './hooks/useGetData';
 
 import Pagination from './components/Pagination';
 import Search from './components/Search';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import { setCurrentPage, setTotal } from './slices/pageSlice';
 
 function App() {
+  const dispatch = useAppDispatch();
+
   // search params 관련
   const searchParams = window.location.search;
   const searchParamsObj = new URLSearchParams(searchParams);
 
+  // 데이터 가져오기
   const { data } = useGetData({
     condition: searchParamsObj.get('condition') || 'all',
     keyword: searchParamsObj.get('keyword') || '',
   });
 
-  const [currentPage, setCurrentPage] = useState(0);
+  // 페이지 관련
+  const { currentPage, total } = useAppSelector((state) => state.page);
   const [pageSize, setPageSize] = useState(10); // TODO: 쿼리로 관리
-
-  const [totalPage, setTotalPage] = useState((data?.length || 0) / pageSize);
 
   // 데이터 또는 페이지당 행 변경 시
   useEffect(() => {
-    setCurrentPage(0);
-    setTotalPage((data?.length || 0) / pageSize);
-  }, [data?.length, pageSize]);
+    dispatch(setCurrentPage(0));
+    dispatch(setTotal((data?.length || 0) / pageSize));
+  }, [data?.length, dispatch, pageSize]);
 
   function onChangePerPage(e: React.ChangeEvent<HTMLSelectElement>) {
     setPageSize(Number(e.target.value));
@@ -92,11 +96,7 @@ function App() {
               <option value="50">50</option>
             </select>
           </div>
-          <Pagination
-            total={Math.ceil(totalPage)}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
+          <Pagination />
         </div>
       )}
     </div>

@@ -20,7 +20,3 @@
   display: flex;
   gap: 2px;
 }
-
-.current {
-  background-color: aqua;
-}
