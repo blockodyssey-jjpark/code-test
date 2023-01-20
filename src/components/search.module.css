@@ -1,0 +1,11 @@
+.search {
+  border: 1px #000 solid;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.searchHeader {
+  font-size: 16px;
+  margin: 0 0 12px;
+  color: green;
+}
