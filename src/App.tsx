@@ -15,18 +15,18 @@ function App() {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // TODO: 쿼리로 관리
+  const [pageSize, setPageSize] = useState(10); // TODO: 쿼리로 관리
 
-  const [totalPage, setTotalPage] = useState((data?.length || 0) / rowsPerPage);
+  const [totalPage, setTotalPage] = useState((data?.length || 0) / pageSize);
 
   // 데이터 또는 페이지당 행 변경 시
   useEffect(() => {
     setCurrentPage(0);
-    setTotalPage((data?.length || 0) / rowsPerPage);
-  }, [data?.length, rowsPerPage]);
+    setTotalPage((data?.length || 0) / pageSize);
+  }, [data?.length, pageSize]);
 
   function onChangePerPage(e: React.ChangeEvent<HTMLSelectElement>) {
-    setRowsPerPage(Number(e.target.value));
+    setPageSize(Number(e.target.value));
   }
 
   return (
@@ -52,10 +52,7 @@ function App() {
         </thead>
         <tbody>
           {data
-            ?.slice(
-              currentPage * rowsPerPage,
-              currentPage * rowsPerPage + rowsPerPage
-            )
+            ?.slice(currentPage * pageSize, currentPage * pageSize + pageSize)
             .map((data, idx) => (
               <tr key={idx}>
                 <td>{data.id}</td>
