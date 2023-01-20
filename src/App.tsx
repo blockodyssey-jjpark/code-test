@@ -17,8 +17,8 @@ function App() {
     <div className="App">
       <h1>Frontend Code Test</h1>
       {/* 검색 영역 */}
-      <div>
-        <h2>상품 검색</h2>
+      <div className={styles.search}>
+        <h2 className={styles.searchHeader}>상품 검색</h2>
         <label>상품 검색</label>
         <select>
           <option value="all">전체</option>
